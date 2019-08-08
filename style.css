@@ -1,0 +1,106 @@
+* {
+  margin: 0 auto;
+  background-color: forestgreen;
+}
+body {
+  margin: 0;
+  background-position: fixed;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  justify-content: center; /*centers items on the line (the x-axis by default)*/
+  align-items: center;
+}
+#canvas {
+  border: 10px solid black;
+  background: url("images/cloudsInfinite.png") repeat;
+  -webkit-animation: loader 16s steps(100) infinite;
+  -moz-animation: loader 16s steps(100) infinite;
+  -ms-animation: loader 16s steps(100) infinite;
+  -o-animation: loader 16s steps(100) infinite;
+  animation: loader 16s steps(100) infinite;
+}
+
+@-webkit-keyframes loader {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1600px 0;
+  }
+}
+@-moz-keyframes loader {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1600px 0;
+  }
+}
+@-ms-keyframes loader {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1600px 0;
+  }
+}
+@-o-keyframes loader {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1600px 0;
+  }
+}
+@keyframes loader {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1600px 0;
+  }
+}
+
+#start-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -140%);
+}
+#score {
+  background-color: aliceblue;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -3000%);
+  width: 550px;
+  font-family: "Press Start 2P", cursive;
+  align-content: center;
+}
+#coin {
+  background-color: aliceblue;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -2900%);
+  width: 550px;
+  font-family: "Press Start 2P", cursive;
+  align-content: center;
+}
+
+#gameText {
+  flex-direction: column;
+}
+#game {
+  width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: black;
+  font-size: 20pt;
+  font-family: "Press Start 2P", cursive;
+  text-align: center;
+}
