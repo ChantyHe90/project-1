@@ -1,42 +1,43 @@
-let minHeight = 20;
-let maxHeight = 120;
-let minWidth = 10;
-let maxWidth = 40;
-let minGap = 200;
-let maxGap = 500;
+// let minHeight = 20;
+// let maxHeight = 120;
+// let minWidth = 10;
+// let maxWidth = 40;
+//question: why intersected shown after alert in intersect
+let minGap = 400;
+let maxGap = 600;
 let myObstacles = [];
 let xflyingObs = [];
+let enemies = [];
 var flyImg = new Image();
 flyImg.src = "images/flyingObs.png";
+var eneMy = new Image();
+eneMy.src = "images/gegner.png"
 let gap = randomGap();
-let myScore;
+let myScore = 0;
+let time = 0;
+
 let context;
 //ducken
 let crouching = false;
-
-//flyingObs
-// var myflyingObs = new Image();
-// myflyingObs.src = "images/flyingObs.png";
-// class flyingObs {
-//     constructor() {
-//         this.height = 380;
-//         this.width = 100;
-//         this.x = Math.floor(Math.random() * x);
-//         this.y = 380;
-//     }
-// this.position = new Position: function () {
-// if (this.y)
+let intersected = false;
 
 var img = new Image();
 img.src = "images/chantycharacter.png";
 var imgDown = new Image()
 imgDown.src = "images/charchantycrouch.png";
-//clouds BEGIN
-var clouds1 = new Image();
-clouds1.src = "images/cloud_1.png";
-var clouds2 = new Image();
-clouds2.src = "images/cloud_2.png";
 
+//intersectIMG
+var intersectImg = new Image();
+intersectImg.src = "images/intersect.png";
+
+//STILL TO IMPLEMENT: 
+//function gameOver() {
+//     if (player.intersect(xflyingObs)) {
+//         gameArea.stop();
+//     } else {
+//         gameArea.updateGameArea();
+//     }
+// }
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'KeyW') {
@@ -44,6 +45,7 @@ document.addEventListener('keydown', (e) => {
     }
     if (e.code === 'KeyS') {
         crouching = true;
+        player.y = 470;
     }
 });
 document.addEventListener('keyup', (e) => {
@@ -52,20 +54,21 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// function intersect(a, b) {
-//     var aLeft = a.x;
-//     var aTop = a.y;
-//     var aRight = a.x + a.width;
-//     var aBottom = a.y + a.height;
-//     var bLeft = b.x;
-//     var bTop = b.y;
-//     var bRight = b.x + b.width;
-//     var bBottom = b.y + b.height;
-//     return !(aLeft > bRight ||
-//         aRight < bLeft ||
-//         aTop > bBottom ||
-//         aBottom < bTop)
-// }
+
+function intersect(a, b) {
+    var aLeft = a.x;
+    var aTop = a.y;
+    var aRight = a.x + a.width;
+    var aBottom = a.y + a.height;
+    var bLeft = b.x;
+    var bTop = b.y;
+    var bRight = b.x + b.width;
+    var bBottom = b.y + b.height;
+    return !(aLeft > bRight ||
+        aRight < bLeft ||
+        aTop > bBottom ||
+        aBottom < bTop)
+}
 //frame = how many times we run (updateGameArea)> as often as it is a multi of n will interval be true
 function everyinterval(n) {
     if (gameArea.frame % n === 0) {
@@ -77,27 +80,32 @@ function everyinterval(n) {
 function jump() {
     player.speedY = -4;
 }
+//randomGap for Obstacles and fly
 function randomGap() {
-    return Math.floor(minGap + Math.random() * (maxGap - minGap + 1))
+    return 1 + Math.floor(minGap + Math.random() * (maxGap - minGap))
 }
 var player = {
     x: 50,
     //changed y from 470 to 450
     y: 450,
-    width: 30,
-    height: 30,
+    width: 50,
+    height: 50,
     speedY: 0,
+    x_velocity: 0,
+    y_velocity: 0,
     //loop move player
     draw: function () {
         // context.fillRect(this.img, this.y, 30, 30);
         if (crouching) {
-            context.drawImage(imgDown, this.x, 470);
+            context.drawImage(imgDown, this.x, this.y);
+        } else if (intersected) {
+            context.drawImage(intersectImg, this.x, this.y);
         } else {
             context.drawImage(img, this.x, this.y);
         }
     },
     newPos: function () {
-        if (this.y < 200) {
+        if (this.y < 180) {
             this.speedY = 2;
         }
         this.y = this.y + this.speedY;
@@ -107,30 +115,35 @@ var player = {
     },
 
 }
+class easy {
+
+}
 
 class Obstacle {
     constructor() {
-        this.height = Math.floor(minHeight + Math.random() * (maxHeight - minHeight + 1));
-        this.width = Math.floor(minWidth + Math.random() * (maxWidth - minWidth + 1));
+        this.height = eneMy.height;
+        this.width = eneMy.width;
+        // this.height = Math.floor(minHeight + Math.random() * (maxHeight - minHeight));
+        // this.width = Math.floor(minWidth + Math.random() * (maxWidth - minWidth));
         this.x = 1200;
         this.y = 500 - this.height;
     }
     //draw the obstacles
     draw() {
-        context.fillRect(this.x, this.y, this.width, this.height)
+        context.drawImage(eneMy, this.x, this.y, this.width, this.height)
+        //    context.fillRect(this.x, this.y, this.width, this.height)
     }
 }
-//flyingObs
+//flyingObs100 × 44
 
 console.log(flyImg)
 class flyingObs {
     constructor() {
-        this.height = Math.floor(minHeight + Math.random() * (maxHeight - minHeight + 1));
-        this.width = Math.floor(minWidth + Math.random() * (maxWidth - minWidth + 1));
+        this.height = 55;
+        this.width = 100;
         this.x = canvas.width;
         this.y = 380;
     }
-
     draw() {
         context.drawImage(flyImg, this.x, this.y, this.width, this.height)
     }
@@ -141,19 +154,32 @@ var gameArea = {
     start: function () {
         //frame counts how many times we run a function
         this.frame = 0;
+        //this.time++;
         //execute "updateGameArea" every 5 miliseconds
-        this.interval = setInterval(this.updateGameArea, 5)
+        this.interval = setInterval(this.updateGameArea.bind(this), 5)
     },
     //update the drawings in the gamearea
 
     updateGameArea: function () {
         //clear the gameArea just 1 very long obs
         gameArea.clear();
+        time++;
+        myScore = time;
+        document.getElementById('score').innerHTML = `Your score: ${myScore}`;
         //everyTime a gap comes a new obs will be pushed to the obs array
-        if (everyinterval(gap)) {
-            myObstacles.push(new Obstacle())
-            gap = randomGap()
-            gameArea.frame = 0;
+        if (this.frame === gap) {
+            if (Math.random() <= 0.5) {
+                myObstacles.push(new Obstacle())
+
+            } else {
+                //flyObs as soon as Obs > 2
+                if (myObstacles.length > 2)
+                    xflyingObs.push(new flyingObs())
+            }
+            gap += randomGap();
+        }
+        if (myScore = 500) {
+            document.getElementById("canvas").innerHTML = "Level2"
         }
         for (i = 0; i < myObstacles.length; i++) {
             //to make obs move subtract every time -1 of the x position
@@ -161,24 +187,37 @@ var gameArea = {
             myObstacles[i].draw();
             //it expects you to call it with objects like this intersect
             // //({ x: 10, y: 10, width: 100, height: 100}, { x: 10, y: 10, width: 100, height: 100})
-            // let intersecting = intersect(player, myObstacles[i])
-            // if (intersecting) {
-            //     console.log('hi');
-            // }//myObstacles.push(new Obstacle()) ==> myOb =[] new ClassName,let xflyingObs=[] xflyingObs.push(new flyingObs)
-            if (everyinterval(gap * 2)) {
-                xflyingObs.push(new flyingObs())
-                gap = randomGap()
-                gameArea.frame = 0;
+            //myObstacles.push(new Obstacle()) ==> myOb =[] new ClassName,let xflyingObs=[] xflyingObs.push(new flyingObs)
+        }
+        for (i = 0; i < xflyingObs.length; i++) {
+            xflyingObs[i].x -= 1;
+            xflyingObs[i].draw();
+        }
+
+        for (i = 0; i < myObstacles.length; i++) {
+            let intersecting = intersect(player, myObstacles[i])
+            //console.log(enemies[i])
+            if (intersecting) {
+                intersected = true;
+                gameArea.stop();
+                alert(`Game over – But honey, you did very well: Your score is: ${myScore}`);
+                document.location.reload();
+
             }
-            for (i = 0; i < xflyingObs.length; i++) {
-                xflyingObs[i].x -= 1;
-                xflyingObs[i].draw();
+        }
+        for (i = 0; i < xflyingObs.length; i++) {
+            let intersecting = intersect(player, xflyingObs[i])
+            //console.log(enemies[i])
+            if (intersecting) {
+                intersected = true;
+                gameArea.stop();
+                alert(`Game over – But honey, you did very well: Your score is: ${myScore}`);
+                document.location.reload();
             }
         }
         player.newPos();
         player.draw();
-
-        gameArea.frame += 1;
+        this.frame += 1;
     },
     //clear drawings
     clear: function () {
@@ -187,8 +226,11 @@ var gameArea = {
     },
     //end the game
     stop: function () {
+        clearInterval(this.interval);
     }
 }
+
+//score board
 
 function removeButton() {
     var elem = document.getElementById("start-button");

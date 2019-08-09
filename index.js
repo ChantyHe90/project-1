@@ -16,8 +16,7 @@ eneMy.src = "images/gegner.png"
 let gap = randomGap();
 let myScore = 0;
 let time = 0;
-let coin = [];
-let myCoins = 0;
+
 // let myAudioUp = new Sound();
 // myAudioUp.src = "/../NFF-rolling-b.wav";
 
@@ -25,7 +24,7 @@ let context;
 //ducken
 let crouching = false;
 let intersected = false;
-let active = true;
+
 
 var img = new Image();
 img.src = "images/chantycharacter.png";
@@ -43,15 +42,17 @@ document.addEventListener('keydown', (e) => {
     }
     if (e.code === 'KeyS') {
         crouching = true;
-        player.y = 470;
+
     }
 });
 document.addEventListener('keyup', (e) => {
     if (e.code === 'KeyS') {
         crouching = false;
-        player.y = 450;
+
     }
 });
+
+
 
 
 function intersect(a, b) {
@@ -98,7 +99,7 @@ var player = {
         if (intersected) {
             context.drawImage(intersectImg, this.x, this.y);
         } else if (crouching) {
-            context.drawImage(imgDown, this.x, this.y);
+            context.drawImage(imgDown, this.x, 470);
         } else {
             context.drawImage(img, this.x, this.y);
         }
@@ -116,20 +117,6 @@ var player = {
 }
 
 
-
-// class Coin {
-//     constructor() {
-//         this.height = 16;
-//         this.width = 8;
-//         this.x = Math.random() * 320;
-//         this.y = 460;
-
-//     }
-//     draw() {
-//         context.fillStyle = "yellow";
-//         context.fillRect(this.x, this.y, this.width, this.height);
-//     }
-// }
 
 
 class Obstacle {
@@ -149,13 +136,13 @@ class Obstacle {
 }
 //flyingObs100 × 44
 
-console.log(flyImg)
+console.log(Obstacle)
 class flyingObs {
     constructor() {
         this.height = 55;
         this.width = 100;
         this.x = canvas.width;
-        this.y = 410;
+        this.y = 390;
     }
     draw() {
         context.drawImage(flyImg, this.x, this.y, this.width, this.height)
@@ -170,6 +157,7 @@ var gameArea = {
         //this.time++;
         //execute "updateGameArea" every 5 miliseconds
         this.interval = setInterval(this.updateGameArea.bind(this), 5)
+
     },
     //update the drawings in the gamearea
 
@@ -182,7 +170,7 @@ var gameArea = {
         //everyTime a gap comes a new obs will be pushed to the obs array
         if (this.frame === gap) {
             if (Math.random() <= 0.5) {
-                myObstacles.push(new flyingObs())
+                myObstacles.push(new Obstacle())
 
             } else {
                 //flyObs as soon as Obs > 2
@@ -191,9 +179,7 @@ var gameArea = {
             }
             gap += randomGap();
         }
-        if (myScore = 500) {
-            document.getElementById("canvas").innerHTML = "Level2"
-        }
+
         for (i = 0; i < myObstacles.length; i++) {
             //to make obs move subtract every time -1 of the x position
             myObstacles[i].x -= 1;
@@ -207,21 +193,19 @@ var gameArea = {
             xflyingObs[i].draw();
         }
 
-        for (i = 0; i < coin.length; i++) {
-            coin[i].x -= 1;
-            coin[i].draw();
-        }
+
 
         for (i = 0; i < myObstacles.length; i++) {
             let intersecting = intersect(player, myObstacles[i])
             //console.log(enemies[i])
             if (intersecting) {
                 intersected = true;
-                gameArea.stop();
                 setTimeout(() => {
                     alert(`Game over – But honey, you did very well: Your score is: ${myScore}`);
                     document.location.reload();
-                }, 1)
+                }, 2)
+                gameArea.stop();
+
             }
         }
         for (i = 0; i < xflyingObs.length; i++) {
@@ -229,24 +213,13 @@ var gameArea = {
             //console.log(enemies[i])
             if (intersecting) {
                 intersected = true;
-                gameArea.stop();
                 setTimeout(() => {
                     alert(`Game over – But honey, you did very well: Your score is: ${myScore}`);
                     document.location.reload();
-                }, 1)
+                }, 2)
+                gameArea.stop();
             }
         }
-        for (i = 0; i < coin.length; i++) {
-            let intersecting = intersect(player, coin[i])
-            if (intersecting) {
-                intersected = true;
-                myCoins++;
-                document.getElementById('coin').innerHTML = `Your coins: ${myCoins}`;
-                coin.active = false;
-
-            }
-        }
-
         player.newPos();
         player.draw();
         this.frame += 1;
@@ -270,6 +243,8 @@ function removeButton() {
     elem.parentNode.removeChild(elem);
 }
 
+
+
 window.onload = function () {
     let canvas = document.getElementsByTagName("canvas")[0];
     canvas.height = 500;
@@ -279,4 +254,5 @@ window.onload = function () {
         gameArea.start();
         removeButton();
     }
+
 }
