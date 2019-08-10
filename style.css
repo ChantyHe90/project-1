@@ -97,12 +97,7 @@ body {
 #gameText {
   flex-direction: column;
 }
-#game {
-  width: 900px;
-  margin: 0 auto;
-}
-
-h1 {
+#gameText h1 {
   color: black;
   font-size: 20pt;
   font-family: "Press Start 2P", cursive;
@@ -111,4 +106,21 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, 130%);
+}
+#gameText p {
+  color: black;
+  font-size: 5pt;
+  font-family: "Press Start 2P", cursive;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 3200%);
+}
+#game {
+  width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
 }

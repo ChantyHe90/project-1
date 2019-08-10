@@ -16,9 +16,13 @@ eneMy.src = "images/gegner.png"
 let gap = randomGap();
 let myScore = 0;
 let time = 0;
-
+let sound = new Audio();
+sound.src = "sound/NFF-rolling-b.mp3"
+let soundCrash = false;
 // let myAudioUp = new Sound();
 // myAudioUp.src = "/../NFF-rolling-b.wav";
+let bgsound = new Audio();
+bgsound.src = "sound/Path to Lake Land.ogg"
 
 let context;
 //ducken
@@ -41,16 +45,21 @@ document.addEventListener('keydown', (e) => {
         jump()
     }
     if (e.code === 'KeyS') {
-        crouching = true;
+        if (player.y === 450) {
+            crouching = true;
+        }
 
     }
 });
 document.addEventListener('keyup', (e) => {
     if (e.code === 'KeyS') {
-        crouching = false;
-
+        if (crouching) {
+            crouching = false;
+            player.y = 450
+        }
     }
 });
+
 
 
 
@@ -77,14 +86,19 @@ function everyinterval(n) {
         return false
     }
 }
-function jump() {
-    player.speedY = -4;
 
+function jump() {
+    console.log(player.y)
+    if (player.y === 450 || player.jumpCount === 1) {
+        player.speedY = -4;
+        player.jumpCount += 1
+    }
 }
 //randomGap for Obstacles and fly
 function randomGap() {
-    return Math.floor(minGap + Math.random() * (maxGap - minGap + 1))
+    return Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
 }
+//Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
 var player = {
     x: 50,
     //changed y from 470 to 450
@@ -92,24 +106,37 @@ var player = {
     width: 50,
     height: 50,
     speedY: 0,
+    jumpCount: 0,
+    // get y() {
+    //     if (crouching) {
+    //         return this.initialY + 20;
+    //     }
+    //     return this.initialY;
+    // },
+    // set y(val) {
+    //     this.initialY = val
+    // },
 
     //loop move player
     draw: function () {
+        console.log("this.x, this.y", this.x, this.y, this.initialY)
         // context.fillRect(this.img, this.y, 30, 30);
         if (intersected) {
             context.drawImage(intersectImg, this.x, this.y);
         } else if (crouching) {
-            context.drawImage(imgDown, this.x, 470);
+            this.y = 470
+            context.drawImage(imgDown, this.x, this.y);
         } else {
             context.drawImage(img, this.x, this.y);
         }
     },
     newPos: function () {
         if (this.y < 180) {
-            this.speedY = 2;
+            this.speedY = 1;
         }
         this.y = this.y + this.speedY;
-        if (this.speedY == 2 && this.y === 450) {
+        if (this.speedY == 1 && this.y === 450) {
+            this.jumpCount = 0
             this.speedY = 0;
         }
     },
@@ -125,7 +152,7 @@ class Obstacle {
         this.width = eneMy.width;
         // this.height = Math.floor(minHeight + Math.random() * (maxHeight - minHeight));
         // this.width = Math.floor(minWidth + Math.random() * (maxWidth - minWidth));
-        this.x = 1200;
+        this.x = 970;
         this.y = 500 - this.height;
     }
     //draw the obstacles
@@ -142,7 +169,7 @@ class flyingObs {
         this.height = 55;
         this.width = 100;
         this.x = canvas.width;
-        this.y = 390;
+        this.y = 410;
     }
     draw() {
         context.drawImage(flyImg, this.x, this.y, this.width, this.height)
@@ -159,6 +186,7 @@ var gameArea = {
         this.interval = setInterval(this.updateGameArea.bind(this), 5)
 
     },
+
     //update the drawings in the gamearea
 
     updateGameArea: function () {
@@ -199,25 +227,27 @@ var gameArea = {
             let intersecting = intersect(player, myObstacles[i])
             //console.log(enemies[i])
             if (intersecting) {
+                sound.play();
                 intersected = true;
                 setTimeout(() => {
                     alert(`Game over – But honey, you did very well: Your score is: ${myScore}`);
                     document.location.reload();
-                }, 2)
+                }, 20)
                 gameArea.stop();
-
             }
         }
         for (i = 0; i < xflyingObs.length; i++) {
             let intersecting = intersect(player, xflyingObs[i])
             //console.log(enemies[i])
             if (intersecting) {
+                sound.play();
                 intersected = true;
                 setTimeout(() => {
                     alert(`Game over – But honey, you did very well: Your score is: ${myScore}`);
                     document.location.reload();
-                }, 2)
+                }, 20)
                 gameArea.stop();
+
             }
         }
         player.newPos();
@@ -253,6 +283,7 @@ window.onload = function () {
     document.getElementById("start-button").onclick = function () {
         gameArea.start();
         removeButton();
+        bgsound.play();
     }
 
 }
