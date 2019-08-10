@@ -59,7 +59,39 @@ document.addEventListener('keyup', (e) => {
         }
     }
 });
+var enterPressed = 0;
 
+
+document.addEventListener('keydown', (e) => {
+
+    if (e.code === 'Space')// Space key
+    {
+        if (enterPressed === 0) {
+            enterPressed = 1;
+            e.preventDefault();
+            setTimeout(gameArea.stop()(
+                console.log("Callback Funktion wird aufgerufen")
+            ), 3000);
+            console.log("Enter pressed once. enterPressed is " + enterPressed);
+        } else if (enterPressed === 1) {
+            e.preventDefault();
+            gameArea.start();
+            console.log("Enter pressed twice. enterPressed is " + enterPressed);
+        }
+
+    }
+});
+
+
+// document.addEventListener('keydown', (e) => {
+
+//     if (e.code === 'Space')// Space key
+//     {
+//         setTimeout(gameArea.stop()(
+//             console.log("Callback Funktion wird aufgerufen")
+//         ), 3000);
+//     }
+// });
 
 
 
